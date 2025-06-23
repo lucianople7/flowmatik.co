@@ -1,0 +1,86 @@
+name = "flowmatik-unified-backend"
+main = "src/index.js"
+compatibility_date = "2024-12-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Variables de entorno
+[vars]
+ENVIRONMENT = "production"
+API_VERSION = "v1"
+MAX_REQUESTS_PER_MINUTE = "1000"
+ENABLE_ANALYTICS = "true"
+AI_PROVIDER = "302.AI"
+AI_MODEL = "Doubao-1.5-pro-32k"
+AI_VISION_MODEL = "Doubao-1.5-vision-pro-32k"
+
+# D1 Database - Base de datos principal
+[[d1_databases]]
+binding = "FLOWMATIK_DB"
+database_name = "flowmatik-production"
+database_id = "your-d1-database-id"
+
+# KV Namespaces - Cache y sesiones
+[[kv_namespaces]]
+binding = "FLOWMATIK_CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-kv-preview-id"
+
+# R2 Bucket - Almacenamiento de archivos
+[[r2_buckets]]
+binding = "FLOWMATIK_FILES"
+bucket_name = "flowmatik-files"
+
+# Vectorize - Vector embeddings para memoria eterna
+[[vectorize]]
+binding = "FLOWMATIK_VECTORIZE"
+index_name = "flowmatik-memory"
+dimensions = 768
+metric = "cosine"
+
+# Workers AI - Para embeddings y análisis
+[ai]
+binding = "AI"
+
+# Secrets - Variables sensibles (configurar desde dashboard)
+# AI_302_API_KEY = "tu-api-key-de-302ai-aqui"
+# JWT_SECRET = "tu-jwt-secret-aqui"
+# LARK_APP_ID = "tu-lark-app-id"
+# LARK_APP_SECRET = "tu-lark-app-secret"
+
+# Configuración de Workers
+[build]
+command = "npm run build"
+
+# Límites y configuración
+[limits]
+cpu_ms = 30000
+
+# Configuración de rutas
+[[routes]]
+pattern = "api.flowmatik.co/*"
+zone_name = "flowmatik.co"
+
+[[routes]]
+pattern = "admin.flowmatik.co/api/*"
+zone_name = "flowmatik.co"
+
+# Configuración de CORS
+[cors]
+origins = ["https://flowmatik.co", "https://admin.flowmatik.co", "http://localhost:3000"]
+methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+headers = ["Content-Type", "Authorization"]
+
+# Configuración de analytics
+[analytics_engine_datasets]
+binding = "FLOWMATIK_ANALYTICS"
+
+# Configuración de rate limiting
+[rate_limiting]
+enabled = true
+requests_per_minute = 1000
+
+# Configuración de observabilidad
+[observability]
+enabled = true
+head_sampling_rate = 0.01
+
